@@ -19,7 +19,7 @@ def scrape():
 
     return final_data
 
-# # NASA Mars News
+# NASA Mars News
 
 def marsnews():
     news_url = "https://mars.nasa.gov/news/"
@@ -32,7 +32,7 @@ def marsnews():
     output = [news_title, news_p]
     return output
 
-# # JPL Mars Space Images - Featured Image
+# Space Images - Featured Image
 def marsimage():
     image_url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars"
     browser.visit(image_url)
@@ -42,35 +42,20 @@ def marsimage():
     featured_image_url = "https://www.jpl.nasa.gov" + image
     return featured_image_url
 
-# # Mars Weather
+# Mars Weather
 def marsweather():
-    
-    import tweepy
-    # Twitter API Keys
-    def get_file_contents(filename):
-        try:
-            with open(filename, 'r') as f:
-                return f.read().strip()
-        except FileNotFoundError:
-            print("'%s' file not found" % filename)
-
-    consumer_key = get_file_contents('consumer_key')
-    consumer_secret = get_file_contents('consumer_secret')
-    access_token = get_file_contents('access_token')
-    access_token_secret = get_file_contents('access_token_secret')
-
-    # Setup Tweepy API Authentication
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
+    target_user = "marswxreport"
+    full_tweet = api.user_timeline(target_user , count = 1)
+    mars_weather=full_tweet[0]['text']
+    
+    # Add to the dictionary
+    mars_data["mars_weather"] = mars_weather    
 
-    target_user = "MarsWxReport"
-    tweet = api.user_timeline(target_user, count =1)
-    mars_weather = ((tweet)[0]['text'])
-    return mars_weather
 
-
-# # Mars Facts
+# Mars Facts
 def marsfacts():
     import pandas as pd
     facts_url = "https://space-facts.com/mars/"
@@ -83,7 +68,7 @@ def marsfacts():
     return mars_facts
 
 
-# # Mars Hemispheres
+# Mars Hemispheres
 def marshem():
     import time 
     hemispheres_url = "https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars"
